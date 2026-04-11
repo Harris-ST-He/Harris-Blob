@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="关于 Harris | 米黄色报纸风博客"
+  description="关于 Harris，以及这个小网站现在想成为什么样子。"
+>
+  <section class="page-head article-body">
+    <p class="kicker">ABOUT HARRIS</p>
+    <h1>我是 Harris，这里暂时是我留下一点自己的地方</h1>
+    <p class="lead">
+      我还在学，也还在找自己的节奏。被AI的冲击真的很大，对于很多计算机领域的东西，已经找不回以前的兴趣了
+    </p>
+    <p class="lead">
+      目前会继续碰前端，还有那些一时半会儿说不清楚、但又确实在影响我的东西
+    </p>
+  </section>
+
+  <section class="article-body prose about-body">
+    <h2>关于我</h2>
+    <p>
+      双非计科26届，考研失败，一段小厂实习，无offer迷茫找工作，日复一日刷面试题中
+    </p>
+
+    <h2>AI冲击后的反思</h2>
+    <p>
+      我会反复想技术到底还能把人带到哪里，也会想，做网页这件事在 AI
+      之后会不会变得和以前不太一样。但我现在还是愿意继续学下去，因为我依然喜欢把想法一点点做成看得见的东西。
+    </p>
+
+    <h2>关于我的失败</h2>
+    <p>
+      感觉自己还是太怠惰了，不知道自己究竟想要什么，考研真的是我想要的吗？前端也真的是我想写的吗？
+    </p>
+    <p>
+      考研确实可以带来三年的缓冲期，但是在AI时代到底要怎么学习才是正确的呢？貌似考研失败了，确实也只有二战能弥补，
+      现在如此卷的环境，AI到底怎么产生新的产业？
+    </p>
+    <p>
+      自从有了AI感觉所有代码都变成了为了产品为目的而开发，找不回以前的兴趣了，脱离了学生时代，感觉没有那么多感不感兴趣了，
+      更像是没有了这个技能就没有了饭碗，我很不喜欢这种感觉，但也无能为力。
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0.3rem 0;
+    line-height: 1.02;
+  }
+
+  .lead {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .about-body {
+    padding-top: 1.5rem;
+  }
+
+  .about-body :global(h2) {
+    margin-top: 2rem;
+    font-size: 1.8rem;
+  }
+</style>

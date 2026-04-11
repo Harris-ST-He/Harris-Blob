@@ -28,14 +28,29 @@ const {
             <img src="/avatar.jpg" alt="Harris 的头像" class="avatar" />
             <div class="identity-copy">
               <a href="/" class="brand">Harris</a>
-              <p class="tagline">这里记录 Harris 的技术思考、写作片段与审美偏好。页面尽量轻，结构尽量稳，让注意力重新回到内容本身。</p>
+              <p class="tagline">一个还在慢慢长出来的个人网站，放一些文章，也放一些还没完全整理好的自己。</p>
             </div>
           </div>
+          <a
+            href="https://github.com/Harris-ST-He"
+            class="github-link"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="github-icon">
+              <path
+                fill="currentColor"
+                d="M12 1.5a10.5 10.5 0 0 0-3.32 20.46c.53.1.72-.23.72-.51v-1.8c-2.95.64-3.57-1.25-3.57-1.25-.48-1.22-1.18-1.55-1.18-1.55-.97-.66.08-.65.08-.65 1.07.08 1.64 1.1 1.64 1.1.95 1.63 2.5 1.16 3.1.89.1-.69.37-1.16.67-1.43-2.36-.27-4.84-1.18-4.84-5.27 0-1.17.42-2.12 1.1-2.87-.11-.27-.48-1.37.1-2.85 0 0 .9-.29 2.96 1.1a10.2 10.2 0 0 1 5.38 0c2.05-1.39 2.95-1.1 2.95-1.1.59 1.48.22 2.58.11 2.85.69.75 1.1 1.7 1.1 2.87 0 4.1-2.49 5-4.87 5.26.38.33.72.99.72 2v2.96c0 .28.19.62.73.51A10.5 10.5 0 0 0 12 1.5Z"
+              />
+            </svg>
+            <span>GitHub</span>
+          </a>
         </div>
         <nav class="nav">
           <a href="/">首页</a>
           <a href="/blog">文章</a>
-          <a href="/rss.xml">RSS</a>
+          <a href="/links">友链</a>
+          <a href="/about">关于</a>
         </nav>
       </header>
       <slot />
@@ -54,8 +69,10 @@ const {
   }
 
   .masthead {
-    display: grid;
-    gap: 0.4rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
     margin: 0.35rem 0 1rem;
   }
 
@@ -100,6 +117,27 @@ const {
     color: var(--ink-soft);
   }
 
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+    align-self: center;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    color: var(--accent);
+    border: 1px solid var(--line);
+    padding: 0.35rem 0.75rem;
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .github-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
   .nav {
     display: flex;
     gap: 1rem;
@@ -122,6 +160,11 @@ const {
   }
 
   @media (max-width: 720px) {
+    .masthead {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
     .identity {
       align-items: flex-start;
     }

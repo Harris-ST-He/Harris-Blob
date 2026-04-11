@@ -7,11 +7,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 );
 ---
 
-<BaseLayout title="全部文章 | Harris" description="Harris 的全部文章列表。">
+<BaseLayout title="文章 | Harris" description="Harris 的文章归档。">
   <section class="page-head">
-    <p class="kicker">文章目录</p>
-    <h1>全部文章</h1>
-    <p class="muted">按时间顺序整理最近写下的内容。</p>
+    <p class="kicker">ARCHIVE</p>
+    <h1>文章</h1>
+    <p class="muted">按时间往下排，没有再做别的分类。</p>
   </section>
 
   <section class="list">

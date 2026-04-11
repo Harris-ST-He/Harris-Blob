@@ -1,67 +1,113 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const latestPosts = posts.slice(0, 3);
+const recentPosts = posts.slice(0, 3);
 ---
 
-<BaseLayout title="Harris | 米黄色报纸风博客" description="Harris 的个人博客，记录技术、写作与审美偏好。">
-  <section class="lead-grid">
-    {latestPosts.map((post, index) => (
-      <article class:list={["card", index === 0 && 'featured']}>
-        <p class="kicker">{post.data.pubDate.toLocaleDateString('zh-CN')}</p>
-        <h2>
-          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-        </h2>
-        <p>{post.data.description}</p>
-      </article>
-    ))}
+<BaseLayout
+  title="Harris | 个人博客"
+  description="Harris 的个人网站，放一些文章，也放一些还没完全整理好的自己。"
+>
+  <section class="home-intro">
+    <p class="kicker">PERSONAL INDEX</p>
+    <h1>我想把这里做成一个安静的个人入口</h1>
+    <p class="lead">
+      不急着表达完整，也不急着更新很快。先把一些正在形成的想法、少量文章，和还没有完全定型的自己，慢慢放在这里
+    </p>
+  </section>
+
+  <section class="home-links">
+    <a href="/about">关于我</a>
+    <a href="/blog">进入文章</a>
+  </section>
+
+  <section class="recent-notes">
+    <p class="kicker">RECENT</p>
+    <div class="recent-list">
+      {
+        recentPosts.map((post) => (
+          <article class="recent-item">
+            <p class="meta">{post.data.pubDate.toLocaleDateString("zh-CN")}</p>
+            <h2>
+              <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+            </h2>
+            <p>{post.data.description}</p>
+          </article>
+        ))
+      }
+    </div>
   </section>
 </BaseLayout>
 
 <style>
-  .lead-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-    padding-top: 0.5rem;
+  .home-intro {
+    padding-bottom: 1.5rem;
+    max-width: 44rem;
   }
 
-  .card {
-    padding: 1rem;
+  .home-intro h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.02;
+    margin: 0.3rem 0;
+    letter-spacing: 0.01em;
+  }
+
+  .lead {
+    margin: 0;
+    font-size: 1rem;
+    max-width: 34rem;
+  }
+
+  .home-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-sans);
+  }
+
+  .home-links a {
+    text-decoration: none;
     border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.28);
-    box-shadow: var(--shadow);
+    padding: 0.4rem 0.8rem;
+    background: rgba(255, 255, 255, 0.24);
   }
 
-  .card h2 {
-    font-size: 1.5rem;
-    margin: 0.25rem 0 0.75rem;
+  .recent-notes {
+    margin-top: 2.5rem;
   }
 
-  .card h2 a {
+  .recent-list {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .recent-item {
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--line);
+    max-width: 42rem;
+  }
+
+  .recent-item h2 {
+    margin: 0.2rem 0 0.5rem;
+    font-size: 1.6rem;
+  }
+
+  .recent-item h2 a {
     text-decoration: none;
   }
 
-  .card p:last-child {
-    margin-bottom: 0;
-  }
-
-  .featured {
-    grid-column: span 2;
-  }
-
-  @media (max-width: 900px) {
-    .lead-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .featured {
-      grid-column: span 1;
-    }
+  .meta {
+    margin: 0;
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
   }
 </style>
