@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const latestPosts = posts.slice(0, 3);
+---
+
+<BaseLayout title="Harris | 米黄色报纸风博客" description="Harris 的个人博客，记录技术、写作与审美偏好。">
+  <section class="lead-grid">
+    {latestPosts.map((post, index) => (
+      <article class:list={["card", index === 0 && 'featured']}>
+        <p class="kicker">{post.data.pubDate.toLocaleDateString('zh-CN')}</p>
+        <h2>
+          <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+        </h2>
+        <p>{post.data.description}</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .lead-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .card {
+    padding: 1rem;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: var(--shadow);
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
+    margin: 0.25rem 0 0.75rem;
+  }
+
+  .card h2 a {
+    text-decoration: none;
+  }
+
+  .card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .featured {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 900px) {
+    .lead-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .featured {
+      grid-column: span 1;
+    }
+  }
+</style>

@@ -1,0 +1,13 @@
+:root {
+  --paper: #f3ead7;
+  --paper-deep: #e7dbc3;
+  --ink: #2f241c;
+  --ink-soft: #5a4b40;
+  --line: rgba(47, 36, 28, 0.18);
+  --accent: #6f4e37;
+  --max-width: 72rem;
+  --reading-width: 48rem;
+  --shadow: 0 10px 30px rgba(47, 36, 28, 0.08);
+  --font-serif: Georgia, 'Times New Roman', 'Songti SC', 'Noto Serif SC', serif;
+  --font-sans: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}

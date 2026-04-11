@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`${tag} | Harris`} description={`Harris 的标签 ${tag} 文章列表。`}>
+  <section class="page-head">
+    <p class="kicker">标签索引</p>
+    <h1>{tag}</h1>
+    <p class="muted">共 {posts.length} 篇文章。</p>
+  </section>
+
+  <section class="list">
+    {posts.map((post) => (
+      <article class="row">
+        <p class="date">{post.data.pubDate.toLocaleDateString('zh-CN')}</p>
+        <h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2>
+        <p>{post.data.description}</p>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .page-head h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0.3rem 0;
+  }
+
+  .list {
+    padding-top: 1rem;
+  }
+
+  .row {
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .row h2 {
+    margin: 0.4rem 0 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .row h2 a {
+    text-decoration: none;
+  }
+
+  .date {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--accent);
+    font-size: 0.9rem;
+  }
+</style>
