@@ -86,13 +86,16 @@ const recentPosts = posts.slice(0, 3);
 
   .recent-list {
     display: grid;
-    gap: 1.2rem;
   }
 
   .recent-item {
-    padding-bottom: 1.2rem;
-    border-bottom: 1px solid var(--line);
     max-width: 42rem;
+  }
+
+  .recent-item:not(:last-child) {
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--line);
   }
 
   .recent-item h2 {
