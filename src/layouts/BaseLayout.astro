@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import FooterStats from "../components/FooterStats.astro";
+import { getSiteStartIso } from "../lib/site";
 
 interface Props {
   title: string;
@@ -10,6 +12,8 @@ const {
   title,
   description = 'Harris 的米黄色报纸风博客。',
 } = Astro.props;
+
+const siteStartIso = await getSiteStartIso();
 ---
 
 <html lang="zh-CN">
@@ -56,6 +60,7 @@ const {
       <slot />
       <footer class="site-footer muted">
         <p>由 Harris 写作，使用 Astro 构建，保持轻量、安静与可读。</p>
+        <FooterStats siteStartIso={siteStartIso} />
       </footer>
     </main>
   </body>

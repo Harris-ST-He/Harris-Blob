@@ -1,0 +1,89 @@
+---
+interface Props {
+  siteStartIso: string;
+}
+
+const { siteStartIso } = Astro.props;
+---
+
+<div class="footer-stats" data-site-start={siteStartIso}>
+  <p>
+    建站
+    <span data-uptime>计算中...</span>
+  </p>
+  <p>
+    累计访客
+    <span data-visitors>0</span>
+    人
+  </p>
+</div>
+
+<script is:inline>
+  const footerStats = document.querySelector(".footer-stats");
+
+  if (footerStats instanceof HTMLElement) {
+    const uptimeElement = footerStats.querySelector("[data-uptime]");
+    const visitorsElement = footerStats.querySelector("[data-visitors]");
+    const siteStart = footerStats.dataset.siteStart;
+    const counterNamespace = "harris-blob";
+    const counterKey = "site-visitors";
+    const visitorStorageKey = "harris-blob-visitor-counted";
+
+    const renderUptime = () => {
+      if (!(uptimeElement instanceof HTMLElement) || !siteStart) return;
+
+      const startTimestamp = new Date(siteStart).getTime();
+      const elapsed = Math.max(Date.now() - startTimestamp, 0);
+      const totalHours = Math.floor(elapsed / (1000 * 60 * 60));
+      const days = Math.floor(totalHours / 24);
+      const hours = totalHours % 24;
+
+      uptimeElement.textContent = `${days} 天 ${hours} 小时`;
+    };
+
+    const renderVisitors = async () => {
+      if (!(visitorsElement instanceof HTMLElement)) return;
+
+      try {
+        const hasCountedVisit = window.localStorage.getItem(visitorStorageKey) === "1";
+        const endpoint = hasCountedVisit ? "get" : "hit";
+        const response = await fetch(
+          `https://api.countapi.xyz/${endpoint}/${counterNamespace}/${counterKey}`,
+        );
+
+        if (!response.ok) {
+          throw new Error(`Count API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const value =
+          typeof data.value === "number" ? data.value.toLocaleString("zh-CN") : "0";
+
+        if (!hasCountedVisit) {
+          window.localStorage.setItem(visitorStorageKey, "1");
+        }
+
+        visitorsElement.textContent = value;
+      } catch (error) {
+        console.error("Failed to load visitor count", error);
+        visitorsElement.textContent = "0";
+      }
+    };
+
+    renderUptime();
+    renderVisitors();
+    window.setInterval(renderUptime, 60 * 1000);
+  }
+</script>
+
+<style>
+  .footer-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+  }
+
+  .footer-stats p {
+    margin: 0;
+  }
+</style>
