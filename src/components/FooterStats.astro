@@ -11,23 +11,26 @@ const { siteStartIso } = Astro.props;
     建站
     <span data-uptime>计算中...</span>
   </p>
-  <p>
+  <p id="busuanzi_container_site_uv">
     累计访客
-    <span data-visitors>0</span>
+    <span id="busuanzi_site_uv">加载中...</span>
     人
   </p>
 </div>
+
+<script
+  is:inline
+  defer
+  src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js"
+></script>
 
 <script is:inline>
   const footerStats = document.querySelector(".footer-stats");
 
   if (footerStats instanceof HTMLElement) {
     const uptimeElement = footerStats.querySelector("[data-uptime]");
-    const visitorsElement = footerStats.querySelector("[data-visitors]");
+    const visitorsElement = document.getElementById("busuanzi_site_uv");
     const siteStart = footerStats.dataset.siteStart;
-    const counterNamespace = "harris-blob";
-    const counterKey = "site-visitors";
-    const visitorStorageKey = "harris-blob-visitor-counted";
 
     const renderUptime = () => {
       if (!(uptimeElement instanceof HTMLElement) || !siteStart) return;
@@ -41,37 +44,35 @@ const { siteStartIso } = Astro.props;
       uptimeElement.textContent = `${days} 天 ${hours} 小时`;
     };
 
-    const renderVisitors = async () => {
+    const renderVisitorsFallback = () => {
       if (!(visitorsElement instanceof HTMLElement)) return;
 
-      try {
-        const hasCountedVisit = window.localStorage.getItem(visitorStorageKey) === "1";
-        const endpoint = hasCountedVisit ? "get" : "hit";
-        const response = await fetch(
-          `https://api.countapi.xyz/${endpoint}/${counterNamespace}/${counterKey}`,
-        );
-
-        if (!response.ok) {
-          throw new Error(`Count API error: ${response.status}`);
+      window.setTimeout(() => {
+        if (visitorsElement.textContent?.trim() === "加载中...") {
+          visitorsElement.textContent = "暂不可用";
         }
+      }, 6000);
+    };
 
-        const data = await response.json();
-        const value =
-          typeof data.value === "number" ? data.value.toLocaleString("zh-CN") : "0";
+    const formatVisitors = () => {
+      if (!(visitorsElement instanceof HTMLElement)) return;
 
-        if (!hasCountedVisit) {
-          window.localStorage.setItem(visitorStorageKey, "1");
-        }
+      const rawValue = visitorsElement.textContent?.trim() ?? "";
 
-        visitorsElement.textContent = value;
-      } catch (error) {
-        console.error("Failed to load visitor count", error);
-        visitorsElement.textContent = "0";
+      if (!rawValue || rawValue === "加载中..." || rawValue === "暂不可用") {
+        return;
+      }
+
+      const numericValue = Number(rawValue.replace(/,/g, ""));
+
+      if (!Number.isNaN(numericValue)) {
+        visitorsElement.textContent = numericValue.toLocaleString("zh-CN");
       }
     };
 
     renderUptime();
-    renderVisitors();
+    renderVisitorsFallback();
+    window.setInterval(formatVisitors, 1000);
     window.setInterval(renderUptime, 60 * 1000);
   }
 </script>
