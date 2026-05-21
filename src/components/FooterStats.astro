@@ -1,0 +1,90 @@
+---
+interface Props {
+  siteStartIso: string;
+}
+
+const { siteStartIso } = Astro.props;
+---
+
+<div class="footer-stats" data-site-start={siteStartIso}>
+  <p>
+    建站
+    <span data-uptime>计算中...</span>
+  </p>
+  <p id="busuanzi_container_site_uv">
+    累计访客
+    <span id="busuanzi_site_uv">加载中...</span>
+    人
+  </p>
+</div>
+
+<script
+  is:inline
+  defer
+  src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js"
+></script>
+
+<script is:inline>
+  const footerStats = document.querySelector(".footer-stats");
+
+  if (footerStats instanceof HTMLElement) {
+    const uptimeElement = footerStats.querySelector("[data-uptime]");
+    const visitorsElement = document.getElementById("busuanzi_site_uv");
+    const siteStart = footerStats.dataset.siteStart;
+
+    const renderUptime = () => {
+      if (!(uptimeElement instanceof HTMLElement) || !siteStart) return;
+
+      const startTimestamp = new Date(siteStart).getTime();
+      const elapsed = Math.max(Date.now() - startTimestamp, 0);
+      const totalHours = Math.floor(elapsed / (1000 * 60 * 60));
+      const days = Math.floor(totalHours / 24);
+      const hours = totalHours % 24;
+
+      uptimeElement.textContent = `${days} 天 ${hours} 小时`;
+    };
+
+    const renderVisitorsFallback = () => {
+      if (!(visitorsElement instanceof HTMLElement)) return;
+
+      window.setTimeout(() => {
+        if (visitorsElement.textContent?.trim() === "加载中...") {
+          visitorsElement.textContent = "暂不可用";
+        }
+      }, 6000);
+    };
+
+    const formatVisitors = () => {
+      if (!(visitorsElement instanceof HTMLElement)) return;
+
+      const rawValue = visitorsElement.textContent?.trim() ?? "";
+
+      if (!rawValue || rawValue === "加载中..." || rawValue === "暂不可用") {
+        return;
+      }
+
+      const numericValue = Number(rawValue.replace(/,/g, ""));
+
+      if (!Number.isNaN(numericValue)) {
+        visitorsElement.textContent = numericValue.toLocaleString("zh-CN");
+      }
+    };
+
+    renderUptime();
+    renderVisitorsFallback();
+    window.setInterval(formatVisitors, 1000);
+    window.setInterval(renderUptime, 60 * 1000);
+  }
+</script>
+
+<style>
+  .footer-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+  }
+
+  .footer-stats p {
+    margin: 0;
+  }
+</style>
